@@ -1,0 +1,12 @@
+com\stock\stocktrade\service\StockService.class
+com\stock\stocktrade\model\Company.class
+com\stock\stocktrade\dto\CompanyDto.class
+com\stock\stocktrade\model\StockPrice.class
+com\stock\stocktrade\mapper\CompanyMapper.class
+com\stock\stocktrade\service\StockServiceImpl.class
+com\stock\stocktrade\repository\StockPriceRepository.class
+com\stock\stocktrade\mapper\StockPriceMapper.class
+com\stock\stocktrade\dto\StockPriceDto.class
+com\stock\stocktrade\repository\StockRepository.class
+com\stock\stocktrade\StockMarketApplication.class
+com\stock\stocktrade\controller\StockController.class
