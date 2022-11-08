@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -16,7 +15,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Document("stock_price")
 public class StockPrice {
-    @Id
+
     private String Id;
     private Integer companyCode;
     private double  stockPrice;
@@ -27,5 +26,6 @@ public class StockPrice {
     private Date endDate;
     @CreatedDate
     private Date time;
+    private String exchange;
 
 }

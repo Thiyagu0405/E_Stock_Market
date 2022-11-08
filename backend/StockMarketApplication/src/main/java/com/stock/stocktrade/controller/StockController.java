@@ -23,7 +23,7 @@ public class StockController {
     private StockService stockService;
 
     @PostMapping(value="/company/register")
-    public ResponseEntity<?> addNewCompany(@RequestBody CompanyDto companyDto) throws DuplicateKeyException {
+    public ResponseEntity<? extends CompanyDto> addNewCompany(@RequestBody CompanyDto companyDto) throws DuplicateKeyException {
 
         return  ResponseEntity.status(HttpStatus.CREATED).body(stockService.addNewCompany(companyDto));
     }

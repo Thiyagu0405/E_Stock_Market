@@ -40,38 +40,5 @@ public class UserServiceImpl implements UserService
 				Arrays.asList(new SimpleGrantedAuthority(user.getRole())));
 	}
 
-	@Override
-	public UserDto signup(UserDto userDto)
-	{
-		if(userRepository.findByUsernameOrEmail(userDto.getUsername(), userDto.getEmail())!=null)
-			return null;
-		userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
-		userDto.setRole("USER");
-		userDto.setConfirmationToken(UUID.randomUUID().toString());
-		userDto.setConfirmed(false);
-		User user = userRepository.save(userMapper.toUser(userDto));
-		return userMapper.toUserDto(user);
-	}
-	
-	@Override
-	public UserDto activate(String token)
-	{
-		User user = userRepository.findByConfirmationToken(token);
-		if(user == null)
-			return null;
-		user.setConfirmed(true);
-		user.setConfirmationToken(null);
-		user = userRepository.save(user);
-		return userMapper.toUserDto(user);
-	}
-	
-	@Override
-	public UserDto update(UserDto userDto) 
-	{
-		if(!userRepository.findById(userDto.getId()).isPresent())
-			return null;
-		User user = userRepository.save(userMapper.toUser(userDto));
-		return userMapper.toUserDto(user);
-	}
 
 }

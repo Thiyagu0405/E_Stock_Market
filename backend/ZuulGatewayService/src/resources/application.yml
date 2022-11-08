@@ -1,0 +1,4 @@
+#spring:
+#  data:
+#    mongodb:
+#      uri: "mongodb://admin:password@ec2-54-201-128-127.us-west-2.compute.amazonaws.com/stocks_db"

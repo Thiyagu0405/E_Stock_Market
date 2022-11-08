@@ -21,7 +21,7 @@ public class SpringFoxConfig
     @Bean
     public Docket todoApi() {
         return new Docket(DocumentationType.SWAGGER_2)
-        		.groupName("stock-market-charting-api")
+        		.groupName("stock-market-api")
                 .apiInfo(apiInfo())
                 .select()
                 .paths(postPaths())

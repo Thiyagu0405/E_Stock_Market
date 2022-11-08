@@ -31,4 +31,6 @@ public class StockPriceDto {
     @CreatedDate
     private Date time;
 
+    private String exchange;
+
 }

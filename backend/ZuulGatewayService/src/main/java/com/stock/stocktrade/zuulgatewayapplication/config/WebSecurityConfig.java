@@ -71,7 +71,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
 			.headers().frameOptions().deny()
 			.and()
 			.authorizeRequests()
-				.antMatchers("/auth/login", "/auth/signup", "/auth/confirm", "/swagger-ui.html/**").permitAll()
+				.antMatchers("/auth/login", "/swagger-ui.html/**").permitAll()
 				.anyRequest().authenticated()
 			.and()
 			.exceptionHandling()

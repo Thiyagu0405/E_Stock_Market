@@ -20,6 +20,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
 
 @Service
 public class StockServiceImpl implements StockService {
@@ -39,18 +40,22 @@ public class StockServiceImpl implements StockService {
     @Autowired
     private MongoTemplate mongoTemplate;
 
+    private Logger logger;
+
+    private static final String COMPANY_CODE = "companyCode";
+    private static final String STOCK_PRICE = "stock_price";
+
 
     @Override
     public List<CompanyDto> getAllStocks()
     {
         LookupOperation lookupOperation = LookupOperation.newLookup()
-                .from("stock_price").localField("companyCode").foreignField("companyCode").as("stockPrices");
+                .from(STOCK_PRICE).localField(COMPANY_CODE).foreignField(COMPANY_CODE).as("stockPrices");
         TypedAggregation<CompanyDto> agg = Aggregation.newAggregation(CompanyDto.class,lookupOperation);
         AggregationResults<CompanyDto> results = mongoTemplate.aggregate(agg,"companies",CompanyDto.class);
         return results.getMappedResults();
 
-//        List<Company> stockExchanges = stockRepository.findAll();
-//        return companyMapper.toCompanyDtos(stockExchanges);
+
     }
 
 
@@ -69,7 +74,7 @@ public class StockServiceImpl implements StockService {
             company = stockRepository.save(company);
 
         } catch (DuplicateKeyException e) {
-            System.out.println(e);
+            logger.info(e.getMessage());
 
         }
         return companyMapper.toCompanyDto(company);
@@ -84,9 +89,9 @@ public class StockServiceImpl implements StockService {
 
     @Override
     public List<CompanyDto> getCompanyByCode(int companyCode) {
-        AggregationOperation aggregation = Aggregation.match(Criteria.where("companyCode").is(companyCode));
+        AggregationOperation aggregation = Aggregation.match(Criteria.where(COMPANY_CODE).is(companyCode));
         LookupOperation lookupOperation = LookupOperation.newLookup()
-                .from("stock_price").localField("companyCode").foreignField("companyCode").as("stockPrices");
+                .from(STOCK_PRICE).localField(COMPANY_CODE).foreignField(COMPANY_CODE).as("stockPrices");
         TypedAggregation<CompanyDto> agg = Aggregation.newAggregation(CompanyDto.class,lookupOperation,aggregation);
 
         AggregationResults<CompanyDto> results = mongoTemplate.aggregate(agg,"companies",CompanyDto.class);
@@ -95,15 +100,15 @@ public class StockServiceImpl implements StockService {
     }
     @Override
     public List<StockPriceDto> getCompanyByDate(int companyCode, String startDate, String endDate) throws ParseException {
+        endDate = endDate.concat(" 23:59:59");
         Date fromDate = new SimpleDateFormat("yyyy-MM-dd").parse(startDate);
-        Date toDate = new SimpleDateFormat("yyyy-MM-dd").parse(endDate);
-
-        AggregationOperation aggregation = Aggregation.match(Criteria.where("companyCode").is(companyCode));
+        Date toDate = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(endDate);
+        AggregationOperation aggregation = Aggregation.match(Criteria.where(COMPANY_CODE).is(companyCode));
         AggregationOperation aggregationDate = Aggregation.match(Criteria.where("createdDate").gte(fromDate)
                 .andOperator(Criteria.where("endDate").lt(toDate)));
         TypedAggregation<StockPriceDto> agg = Aggregation.newAggregation(StockPriceDto.class,aggregationDate,aggregation);
 
-        AggregationResults<StockPriceDto> results = mongoTemplate.aggregate(agg,"stock_price",StockPriceDto.class);
+        AggregationResults<StockPriceDto> results = mongoTemplate.aggregate(agg,STOCK_PRICE,StockPriceDto.class);
         return results.getMappedResults();
 
     }
